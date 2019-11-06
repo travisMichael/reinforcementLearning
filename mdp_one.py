@@ -2,6 +2,7 @@ import gym
 # from gym import envs
 import numpy as np
 from FrozenLake import FrozenLakeEnv
+from util import create_policy_descriptions, value_iteration
 
 env = gym.make('FrozenLake-v0')
 state = env.reset()
@@ -18,26 +19,38 @@ a_n = env.action_space.n
 # DOWN = 1
 # RIGHT = 2
 # UP = 3
-v_c = np.zeros(16)
-v_c[15] = 1.0
-v_old = v_c
+action_map = {0: 'LEFT', 1: 'DOWN', 2: 'RIGHT', 3: 'UP'}
 
+V_k, policy = value_iteration(env, 0.99)
+
+policy_descriptions = create_policy_descriptions(action_map, policy)
+
+
+# compute policy
 hit = 0
+for _ in range(1000):
+    state = env.reset()
+    done = False
+    while not done:
+        action = policy[state]
+        state, reward, done, _ = env.step(action)
+        if reward > 0.99:
+            hit += 1
+            print('success')
 
-for i in range(s_n):
-    max = -1.0
+print('success rate', float(hit/1000))
 
-for _ in range(10):
-
-    env.reset()
-    env.reset_state(5)
-    env.render()
-    new_state, reward, done, info = env.step(0)
-    print(new_state, info['prob'], reward, done)
-    if new_state == 0:
-        hit += 1
-
-print(0, float(hit/100))
+# env.render()
+print(V_k[0:4])
+print(V_k[4:8])
+print(V_k[8:12])
+print(V_k[12:16])
+print(policy_descriptions[0:4])
+print(policy_descriptions[4:8])
+print(policy_descriptions[8:12])
+print(policy_descriptions[12:16])
+print('------')
+print(policy)
 
 # print(envs.registry.all())
 
