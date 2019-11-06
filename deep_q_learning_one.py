@@ -22,12 +22,19 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
     eps = eps_start                    # initialize epsilon
     for i_episode in range(1, n_episodes+1):
         state = env.reset()
+        s = np.zeros(16)
+        s[state] = 1
+        state = s
         score = 0
         for t in range(max_t):
             action = agent.act(state, eps)
             next_state, reward, done, _ = env.step(action)
+            next_s = np.zeros(16)
+            next_s[next_state] = 1
+            next_state = next_s
             agent.step(state, action, reward, next_state, done)
             state = next_state
+
             score += reward
             if done:
                 break
@@ -44,12 +51,12 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
     return scores
 
 
-env = gym.make('CartPole-v0')
+env = gym.make('FrozenLake-v0')
 env.seed(0)
 print('State shape: ', env.observation_space.shape)
 print('Number of actions: ', env.action_space.n)
 
-agent = Agent(state_size=4, action_size=2, seed=0)
+agent = Agent(state_size=16, action_size=4, seed=0)
 
 scores = dqn()
 
