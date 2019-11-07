@@ -1,6 +1,35 @@
 import numpy as np
 
+# LEFT = 0
+# DOWN = 1
+# RIGHT = 2
+# UP = 3
+action_map = {0: 'LEFT', 1: 'DOWN', 2: 'RIGHT', 3: 'UP'}
 
+
+# Procedure Value_Iteration(S,A,P,R,θ)
+# 2:           Inputs
+# 3:                     S is the set of all states
+# 4:                     A is the set of all actions
+# 5:                     P is state transition function specifying P(s'|s,a)
+# 6:                     R is a reward function R(s,a,s')
+# 7:                     θ a threshold, θ>0
+# 8:           Output
+# 9:                     π[S] approximately optimal policy
+# 10:                    V[S] value function
+# 11:           Local
+# 12:                     real array Vk[S] is a sequence of value functions
+# 13:                     action array π[S]
+# 14:           assign V0[S] arbitrarily
+# 15:           k ←0
+# 16:           repeat
+# 17:                     k ←k+1
+# 18:                     for each state s do
+# 19:                               Vk[s] = maxa ∑s' P(s'|s,a) (R(s,a,s')+ γVk-1[s'])
+# 20:           until ∀s |Vk[s]-Vk-1[s]| < θ
+# 21:           for each state s do
+# 22:                     π[s] = argmaxa ∑s' P(s'|s,a) (R(s,a,s')+ γVk[s'])
+# 23:           return π,Vk
 def value_iteration(environment, gamma = 0.99):
     state_space_size = environment.observation_space.n
     action_space_size = environment.action_space.n
@@ -45,7 +74,7 @@ def value_max_with_arg_max(state, V_k_previous, gamma, P):
     return max, best_action
 
 
-def create_policy_descriptions(action_map, policy):
+def create_policy_descriptions(policy):
     policy_descriptions = []
     for i in range(16):
         policy_descriptions.append(action_map[policy[i]])
@@ -96,6 +125,8 @@ def extract_policy(V, env, gamma=0.99):
 
 
 def calculate_values_from_policy(policy, env, gamma=0.99, iterations=50):
+    #         v[s] = sum([p * (r + gamma * prev_v[s_]) for p, s_, r, _ in env.P[s][policy_a]])
+    #     if (np.sum((np.fabs(prev_v - v))) <= eps):
     P = env.P
     s_n = env.observation_space.n
     V = np.zeros(s_n)
@@ -112,6 +143,7 @@ def calculate_values_from_policy(policy, env, gamma=0.99, iterations=50):
                 next_state = transition[1]
                 reward = transition[2]
                 sum += probability * (reward + gamma * V_prev[next_state])
+            V[i] = sum
 
         V_prev = V
     return V
@@ -129,3 +161,10 @@ def evaluate_policy(env, policy):
             if reward > 0.99:
                 hit += 1
     return float(hit/iterations)
+
+
+def print_array(a):
+    print(a[0:4])
+    print(a[4:8])
+    print(a[8:12])
+    print(a[12:16])
