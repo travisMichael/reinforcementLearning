@@ -44,12 +44,13 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
     return scores
 
 
-env = gym.make('CartPole-v0')
+# env = gym.make('CartPole-v0')
+env = gym.make('MountainCar-v0')
 env.seed(0)
 print('State shape: ', env.observation_space.shape)
 print('Number of actions: ', env.action_space.n)
 
-agent = Agent(state_size=4, action_size=2, seed=0)
+agent = Agent(state_size=2, action_size=env.action_space.n, seed=0)
 
 scores = dqn()
 

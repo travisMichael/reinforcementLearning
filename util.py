@@ -187,6 +187,18 @@ def get_values_and_policy_from_q_learner(path):
     return V, policy
 
 
+def get_values_from_q_learner(path):
+    q_table = np.load(path)
+    V = np.zeros(16)
+    policy = np.zeros(16)
+
+    for i in range(16):
+        V[i] = np.max(q_table[i])
+        policy[i] = np.argmax(q_table[i])
+
+    return V, policy
+
+
 def print_array(a):
     print(a[0:4])
     print(a[4:8])

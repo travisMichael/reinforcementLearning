@@ -16,7 +16,8 @@ a_n = env.action_space.n
 
 V_k, policy = value_iteration(env, 0.99)
 V_k_2, policy_2 = policy_iteration(env, 0.99)
-V_k_3, policy_3 = get_values_and_policy_from_q_learner('checkpoint.pth')
+# V_k_3, policy_3 = get_values_and_policy_from_q_learner('checkpoint.pth')
+V_k_3, policy_3 = get_values_from_q_learner('best_q_learner_one.npy')
 
 policy_descriptions = create_policy_descriptions(policy)
 policy_descriptions_3 = create_policy_descriptions(policy_3)
