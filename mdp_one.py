@@ -2,7 +2,7 @@ import gym
 # from gym import envs
 import numpy as np
 from FrozenLake import FrozenLakeEnv
-from util import create_policy_descriptions, value_iteration
+from util import create_policy_descriptions, value_iteration, policy_iteration, evaluate_policy
 
 env = gym.make('FrozenLake-v0')
 state = env.reset()
@@ -22,23 +22,12 @@ a_n = env.action_space.n
 action_map = {0: 'LEFT', 1: 'DOWN', 2: 'RIGHT', 3: 'UP'}
 
 V_k, policy = value_iteration(env, 0.99)
+V_k_2, policy_2 = policy_iteration(env, 0.99)
 
 policy_descriptions = create_policy_descriptions(action_map, policy)
 
+evaluation_score = evaluate_policy(env, policy)
 
-# compute policy
-hit = 0
-for _ in range(1000):
-    state = env.reset()
-    done = False
-    while not done:
-        action = policy[state]
-        state, reward, done, _ = env.step(action)
-        if reward > 0.99:
-            hit += 1
-            print('success')
-
-print('success rate', float(hit/1000))
 
 # env.render()
 print(V_k[0:4])
