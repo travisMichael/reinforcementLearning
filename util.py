@@ -1,4 +1,6 @@
 import numpy as np
+from DQN import QNetwork
+import torch
 
 # LEFT = 0
 # DOWN = 1
@@ -34,7 +36,7 @@ def value_iteration(environment, gamma = 0.99):
     state_space_size = environment.observation_space.n
     action_space_size = environment.action_space.n
     V_k = np.zeros(state_space_size)
-    V_k[state_space_size - 1] = 1.0
+    # V_k[state_space_size - 1] = 1.0
 
     V_k_previous = V_k
     P = environment.P
@@ -42,7 +44,7 @@ def value_iteration(environment, gamma = 0.99):
 
     for _ in range(100):
 
-        for state in range(15):
+        for state in range(state_space_size):
             V_k[state], policy[state] = value_max_with_arg_max(state, V_k_previous, gamma, P)
 
         V_k_previous = V_k
@@ -161,6 +163,28 @@ def evaluate_policy(env, policy):
             if reward > 0.99:
                 hit += 1
     return float(hit/iterations)
+
+
+def get_values_and_policy_from_q_learner(path):
+    model = QNetwork(16, 4, 0)
+    model.load_state_dict(torch.load(path))
+    model.eval()
+
+    policy = np.zeros(16)
+    V = np.zeros(16)
+
+    for i in range(16):
+        state = np.zeros(16)
+        state[i] = 1
+        state = torch.from_numpy(state).float().unsqueeze(0).to("cpu")
+
+        action_values = model(state)
+
+        V[i] = np.max(action_values.cpu().data.numpy())
+
+        policy[i] = np.argmax(action_values.cpu().data.numpy())
+
+    return V, policy
 
 
 def print_array(a):

@@ -1,8 +1,6 @@
 import gym
-# from gym import envs
-import numpy as np
 from FrozenLake import FrozenLakeEnv
-from util import create_policy_descriptions, value_iteration, policy_iteration, evaluate_policy, print_array
+from util import *
 
 env = gym.make('FrozenLake-v0')
 state = env.reset()
@@ -18,8 +16,10 @@ a_n = env.action_space.n
 
 V_k, policy = value_iteration(env, 0.99)
 V_k_2, policy_2 = policy_iteration(env, 0.99)
+V_k_3, policy_3 = get_values_and_policy_from_q_learner('checkpoint.pth')
 
 policy_descriptions = create_policy_descriptions(policy)
+policy_descriptions_3 = create_policy_descriptions(policy_3)
 
 evaluation_score = evaluate_policy(env, policy)
 
@@ -28,11 +28,8 @@ evaluation_score = evaluate_policy(env, policy)
 print_array(V_k)
 
 print_array(policy_descriptions)
-
-# print(policy_descriptions[0:4])
-# print(policy_descriptions[4:8])
-# print(policy_descriptions[8:12])
-# print(policy_descriptions[12:16])
+print('------------------------------------')
+print_array(policy_descriptions_3)
 print('------')
 print(policy)
 print(policy_2)
