@@ -1,6 +1,7 @@
 import numpy as np
 from util_2 import discretize
 
+
 class DiscreteQLearningAgent:
     """Q-Learning agent that can act on a continuous state space by discretizing it."""
 
@@ -51,6 +52,8 @@ class DiscreteQLearningAgent:
     def act(self, state, reward=None, done=None, mode='train'):
         """Pick next action and update internal Q table (when mode != 'test')."""
         state = self.preprocess_state(state)
+        if state[0] == 9 or state[1] == 9:
+            print()
         if mode == 'test':
             # Test mode: Simply produce an action
             action = np.argmax(self.q_table[state])

@@ -5,7 +5,7 @@ from DiscreteQLearningAgent import DiscreteQLearningAgent
 from util_2 import create_uniform_grid
 
 
-env = gym.make('MountainCar-v0')
+env = gym.make('Pendulum-v0')
 env.seed(505)
 
 
@@ -42,6 +42,6 @@ def run(agent, env, num_episodes=20000, mode='train'):
     return scores
 
 
-state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(10, 10))
+state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(10, 10, 20))
 q_agent = DiscreteQLearningAgent(env, state_grid)
 scores = run(q_agent, env)
