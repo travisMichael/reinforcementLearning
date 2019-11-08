@@ -4,6 +4,7 @@ from gym.utils import seeding
 import numpy as np
 from os import path
 
+
 class PendulumEnv(gym.Env):
     metadata = {
         'render.modes' : ['human', 'rgb_array'],
