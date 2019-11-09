@@ -3,7 +3,7 @@ from gym import spaces
 from gym.utils import seeding
 import numpy as np
 from os import path
-
+import math
 
 class PendulumEnv(gym.Env):
     metadata = {
