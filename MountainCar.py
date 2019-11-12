@@ -39,16 +39,20 @@ class MountainCarEnv(gym.Env):
 
     def step(self, action):
         assert self.action_space.contains(action), "%r (%s) invalid" % (action, type(action))
-
+        # -1 = action-1
         position, velocity = self.state
         velocity += (action-1)*self.force + math.cos(3*position)*(-self.gravity)
         velocity = np.clip(velocity, -self.max_speed, self.max_speed)
         position += velocity
         position = np.clip(position, self.min_position, self.max_position)
-        if (position==self.min_position and velocity<0): velocity = 0
+        reward = -1.0
+        if (position==self.min_position and velocity<0):
+            velocity = 0
+            reward = -200
+
 
         done = bool(position >= self.goal_position and velocity >= self.goal_velocity)
-        reward = -1.0
+
 
         self.state = (position, velocity)
         return np.array(self.state), reward, done, {}

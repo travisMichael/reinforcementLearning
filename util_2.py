@@ -2,6 +2,50 @@ import numpy as np
 # utility file for the MDP two
 
 
+def get_closest_point(points):
+    pass
+
+
+def get_neighboring_points(state, env):
+
+    high = env.high
+    low = env.low
+
+    diff = (high - low) / 10
+
+    # top
+    points = []
+    if state[0] + 1 < 9:
+        temp_state = state
+        temp_state[0] += 1
+        point = low + np.multiply(temp_state, diff)
+        points.append(point)
+
+    # right
+    if state[1] + 1 < 9:
+        temp_state = state
+        temp_state[1] += 1
+        point = low + np.multiply(temp_state, diff)
+
+        points.append(point)
+
+    # bottom
+    if state[0] - 1 > 0:
+        temp_state = state
+        temp_state[0] -= 1
+        point = low + np.multiply(temp_state, diff)
+        points.append(point)
+
+    # left
+    if state[1] - 1 > 0:
+        temp_state = state
+        temp_state[1] -= 1
+        point = low + np.multiply(temp_state, diff)
+        points.append(point)
+
+    return points
+
+
 def discretize(sample, grid):
     """Discretize a sample as per given grid.
 

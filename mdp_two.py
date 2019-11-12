@@ -6,12 +6,13 @@ from util_2 import value_iteration
 import numpy as np
 from util_2 import create_uniform_grid
 import math
-from util_2 import discretize
+from util_2 import discretize, get_neighboring_points
+
 
 
 # env = gym.make('MountainCar-v0')
 env = MountainCarEnv()
-env = PendulumEnv()
+# env = PendulumEnv()
 env.seed(505)
 
 
@@ -34,21 +35,47 @@ action_4 = np.array([0.4])
 
 
 def calculate_state_value(V_k_prev, state, state_grid, env, action_grid, gamma):
-    max = -np.inf
-    best_action = action_grid[0][0]
-    for action in action_grid[0]:
+    d_state = discretize(state, state_grid)
+    # points = get_neighboring_points(d_state, env)
+    # next_state_map = {}
+    best_value = -np.inf
+    best_action = 0
+    reward = -1.0
+    for action in action_grid:
+        env.reset()
         env.state = state
-        next_state, reward, _, _ = env.step([action])
+        next_state, reward, done, _ = env.step(action)
         n_s = tuple(discretize(next_state, state_grid))
-        value = reward + gamma * V_k_prev[n_s[0]][n_s[1]][n_s[2]]
-        if value == max:
-            if np.random.uniform(0, 1) < 0.5:
-                max = value
-                best_action = action
-        if value > max:
-            max = value
+        value = gamma * V_k_prev[n_s[0]][n_s[1]]
+        if done and reward != -10:
+            reward = 0.0
+            # env.render()
+
+        # value = reward + gamma * V_k_prev[n_s[0]][n_s[1]]
+        if value == best_value and np.random.uniform(0, 1) > 0.33:
+            best_value = value
             best_action = action
-    return max, best_action
+        if value > best_value:
+            best_value = value
+            best_action = action
+    #     key = str(n_s[0]) + "-" + str(n_s[1])
+    #     map_value = next_state_map.get(key)
+    #     if map_value == None:
+    #         next_state_map[key] = [value, [action, reward]]
+    #     else:
+    #         if map_value[1][1] < reward:
+    #             map_value[0] = value
+    #             map_value[1] = [action, reward]
+    #         next_state_map[key] = map_value
+    # best = -np.inf
+    # best_action = action_grid[0]
+    # for k in next_state_map.keys():
+    #     map_value = next_state_map.get(k)
+    #     if map_value[0] > best:
+    #         best = map_value[0]
+    #         best_action = map_value[1][0]
+
+    return reward + best_value, best_action
 
 
 def V_diff(V_1, V_2, state_grid):
@@ -58,54 +85,51 @@ def V_diff(V_1, V_2, state_grid):
 
 def value_iteration(env, state_grid, action_grid, gamma=0.99):
     state_size = tuple(len(splits) + 1 for splits in state_grid)  # n-dimensional state space
-    action_size = len(action_grid[0]) # self.env.action_space.n
 
     V_k = np.zeros(shape=(state_size))
     policy = np.zeros(shape=(state_size))
-    V_k[:,:,:] = -50
+    policy[:,:] = 0
     V_k_prev = np.copy(V_k)
     iterations = 0
     diff = 1.0
-    while diff > 0.0000000001:
+    while diff > 0.000000001:
         iterations += 1
-        for i in range(len(state_grid[0])):
-            for j in range(len(state_grid[1])):
-                for k in range(len(state_grid[2])):
-                    theta = math.atan2(state_grid[0][i], state_grid[1][j])
-                    thetadot = state_grid[2][k]
-                    state = [theta, thetadot]
-                    V_k[i][j][k], policy[i][j][k] = calculate_state_value(V_k_prev, state, state_grid, env, action_grid, gamma)
+        for i in range(10):
+            state = env.observation_space.sample()
+            s = tuple(discretize(state, state_grid))
+            V_k[s[0]][s[1]], policy[s[0]][s[1]] = calculate_state_value(V_k_prev, state, state_grid, env, action_grid, gamma)
         diff = V_diff(V_k, V_k_prev, state_grid)
         V_k_prev = np.copy(V_k)
         if iterations % 20:
             print(diff)
+            np.save('mdp_2_policy', policy)
     print(iterations)
     return V_k, policy
 
 
-action_grid = create_uniform_grid(env.action_space.low, env.action_space.high, bins=(7,))
-state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(10, 10, 10))
+action_grid = [0, 1, 2]
+state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(10, 10))
 
 V_k, policy = value_iteration(env, state_grid, action_grid, 0.99)
 
 np.save('mdp_2_policy', policy)
 
-_, reward, done, _ = env.step(action)
-next_state = env.state
-print(next_state, reward, done)
-
-env.state = state
-
-_, reward, done, _ = env.step(action_2)
-next_state = env.state
-print(next_state, reward, done)
-
-_, reward, done, _ = env.step(action_3)
-next_state = env.state
-print(next_state, reward, done)
-
-_, reward, done, _ = env.step(action_4)
-next_state = env.state
-print(next_state, reward, done)
+# _, reward, done, _ = env.step(action)
+# next_state = env.state
+# print(next_state, reward, done)
+#
+# env.state = state
+#
+# _, reward, done, _ = env.step(action_2)
+# next_state = env.state
+# print(next_state, reward, done)
+#
+# _, reward, done, _ = env.step(action_3)
+# next_state = env.state
+# print(next_state, reward, done)
+#
+# _, reward, done, _ = env.step(action_4)
+# next_state = env.state
+# print(next_state, reward, done)
 
 env.close()
