@@ -1,14 +1,8 @@
-import gym
 # from CartPole import CartPoleEnv
-from MountainCar import MountainCarEnv
-from Pendulum import PendulumEnv
-from util_2 import value_iteration
+from environment.MountainCar import MountainCarEnv
 import numpy as np
-from util_2 import create_uniform_grid
-import math
-from util_2 import discretize, get_neighboring_points
-
-
+from mdp_two_module.util_2 import create_uniform_grid
+from mdp_two_module.util_2 import discretize
 
 # env = gym.make('MountainCar-v0')
 env = MountainCarEnv()

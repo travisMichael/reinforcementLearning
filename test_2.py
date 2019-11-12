@@ -1,10 +1,8 @@
 
-from MountainCar import MountainCarEnv
+from environment.MountainCar import MountainCarEnv
 import numpy as np
-from util_2 import create_uniform_grid
-from util_2 import discretize
-from mdp_two_module.snapToGrid import snap_to_grid
-
+from mdp_two_module.util_2 import create_uniform_grid
+from mdp_two_module.util_2 import discretize
 
 # env = gym.make('MountainCar-v0')
 env = MountainCarEnv()

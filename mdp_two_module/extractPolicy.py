@@ -1,6 +1,6 @@
 import numpy as np
 from mdp_two_module.mountainCarSimulation import mountainCarSim
-from mdp_two_module.snapToGrid import snap_to_grid
+from discrete.snapToGrid import snap_to_grid
 
 
 def extract_policy_from_values(u_max, gridSize, J):
@@ -47,7 +47,7 @@ def extract_policy_from_values(u_max, gridSize, J):
 
 
                 if pNextIdx != gridPos:
-                    Jplus1_ = Jplus1_ + 1
+                    Jplus1_ = 0.99 * Jplus1_ + 1
                 else:
                     pass
                 # end

@@ -1,6 +1,6 @@
 import numpy as np
 from mdp_two_module.mountainCarSimulation import mountainCarSim
-from mdp_two_module.snapToGrid import snap_to_grid
+from discrete.snapToGrid import snap_to_grid
 
 
 def extract_values_from_policy(u_max, gridSize, maxHorizon, policy):

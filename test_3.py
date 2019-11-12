@@ -1,8 +1,6 @@
 import numpy as np
 import gym
-import sys
-from util_2 import discretize, create_uniform_grid
-from mdp_two_module.snapToGrid import snap_to_grid
+from discrete.snapToGrid import snap_to_grid
 
 env = gym.make('MountainCar-v0')
 # env = PendulumEnv()
@@ -29,7 +27,7 @@ def run(q_table, env, num_episodes=20000, mode='train'):
             pNext, vNext = state
             pNextIdx = snap_to_grid(pNext, P_MIN, P_MAX, 100)
             vNextIdx = snap_to_grid(vNext, V_MIN, V_MAX, 100)
-            action = q_table[int(pNextIdx)][int(vNextIdx)] * (-1) + 1
+            action = q_table[int(pNextIdx)][int(vNextIdx)] + 1
             state, reward, done, info = env.step(int(action))
             total_reward += reward
 
@@ -37,5 +35,7 @@ def run(q_table, env, num_episodes=20000, mode='train'):
 
 # state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(100, 100))
 
-q_table = np.load('mdp_two_module/policy_2.npy')
+q_table = np.load('mdp_two_module/policy_3.npy')
+
+
 scores = run(q_table, env, mode='test')

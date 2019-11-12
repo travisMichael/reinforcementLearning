@@ -1,7 +1,7 @@
 import numpy as np
 import gym
 import sys
-from QLearningAgent import QLearningAgent
+from discrete.QLearningAgent import QLearningAgent
 
 env = gym.make('FrozenLake-v0')
 env.seed(505)

@@ -1,8 +1,7 @@
 import numpy as np
-import gym
 import sys
-from DiscreteQLearningAgent import DiscreteQLearningAgent
-from util_2 import create_uniform_grid
+from discrete.DiscreteQLearningAgent import DiscreteQLearningAgent
+from mdp_two_module.util_2 import create_uniform_grid
 from Pendulum import PendulumEnv
 
 

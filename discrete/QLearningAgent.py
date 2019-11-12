@@ -1,5 +1,4 @@
 import numpy as np
-from util_2 import discretize
 
 
 class QLearningAgent:

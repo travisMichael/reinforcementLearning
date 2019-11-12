@@ -1,5 +1,5 @@
 import numpy as np
-from DQN import QNetwork
+from deep_learning_module.DQN import QNetwork
 import torch
 
 # LEFT = 0

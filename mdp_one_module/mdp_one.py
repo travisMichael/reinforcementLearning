@@ -1,13 +1,13 @@
 import gym
-from FrozenLake import FrozenLakeEnv
-from util import *
+from environment.FrozenLake import FrozenLakeEnv
+from mdp_one_module.util import *
 
-env = gym.make('FrozenLake-v0')
-state = env.reset()
+# env = gym.make('FrozenLake-v0')
+# state = env.reset()
 
 env = FrozenLakeEnv()
 
-print(state)
+# print(state)
 print(env.action_space)
 print(env.observation_space)
 s_n = env.observation_space.n

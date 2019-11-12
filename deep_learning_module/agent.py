@@ -2,7 +2,7 @@ import numpy as np
 import random
 from collections import namedtuple, deque
 
-from DQN import QNetwork
+from deep_learning_module.DQN import QNetwork
 
 import torch
 import torch.nn.functional as F

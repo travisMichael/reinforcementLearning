@@ -3,10 +3,10 @@ import torch
 import numpy as np
 from collections import deque
 import matplotlib.pyplot as plt
-from agent import Agent
+from deep_learning_module.agent import Agent
 
 
-def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
+def dqn(n_episodes=3000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
     """Deep Q-Learning.
 
     Params
@@ -17,17 +17,25 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         eps_end (float): minimum value of epsilon
         eps_decay (float): multiplicative factor (per episode) for decreasing epsilon
     """
+    best = 0.0
     scores = []                        # list containing scores from each episode
     scores_window = deque(maxlen=100)  # last 100 scores
     eps = eps_start                    # initialize epsilon
     for i_episode in range(1, n_episodes+1):
         state = env.reset()
+        s = np.zeros(16)
+        s[state] = 1
+        state = s
         score = 0
         for t in range(max_t):
             action = agent.act(state, eps)
             next_state, reward, done, _ = env.step(action)
+            next_s = np.zeros(16)
+            next_s[next_state] = 1
+            next_state = next_s
             agent.step(state, action, reward, next_state, done)
             state = next_state
+
             score += reward
             if done:
                 break
@@ -37,20 +45,20 @@ def dqn(n_episodes=2000, max_t=1000, eps_start=1.0, eps_end=0.01, eps_decay=0.99
         print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)), end="")
         if i_episode % 100 == 0:
             print('\rEpisode {}\tAverage Score: {:.2f}'.format(i_episode, np.mean(scores_window)))
-        if np.mean(scores_window)>=200.0:
+        if np.mean(scores_window)>=best:
+            best = np.mean(scores_window)
             print('\nEnvironment solved in {:d} episodes!\tAverage Score: {:.2f}'.format(i_episode-100, np.mean(scores_window)))
             torch.save(agent.qnetwork_local.state_dict(), 'checkpoint.pth')
-            break
+            # break
     return scores
 
 
-# env = gym.make('CartPole-v0')
-env = gym.make('MountainCar-v0')
+env = gym.make('FrozenLake-v0')
 env.seed(0)
 print('State shape: ', env.observation_space.shape)
 print('Number of actions: ', env.action_space.n)
 
-agent = Agent(state_size=2, action_size=env.action_space.n, seed=0)
+agent = Agent(state_size=16, action_size=4, seed=0)
 
 scores = dqn()
 

@@ -2,7 +2,7 @@
 
 import numpy as np
 from mdp_two_module.mountainCarSimulation import mountainCarSim
-from mdp_two_module.snapToGrid import snap_to_grid
+from discrete.snapToGrid import snap_to_grid
 
 
 def value_iteration(u_max, gridSize, maxHorizon):
@@ -28,7 +28,7 @@ def value_iteration(u_max, gridSize, maxHorizon):
     J = np.zeros((gridPos + 1, gridVel + 1))
     # Policy matrix
     policy = np.zeros((gridPos+1, gridVel+1))
-    u = [0, -u_max, u_max]
+    u = [0, u_max, -u_max]
     # u = [0, -u_max, u_max]; % <-- '0' comes first, keep in mind that optimal
     # policy is not unique eventhough the cost is unique. If all actions
     # contribute to the same costs, we will select u = 0.

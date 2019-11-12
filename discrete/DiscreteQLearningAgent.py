@@ -1,5 +1,5 @@
 import numpy as np
-from util_2 import discretize
+from mdp_two_module.util_2 import discretize
 
 
 class DiscreteQLearningAgent:

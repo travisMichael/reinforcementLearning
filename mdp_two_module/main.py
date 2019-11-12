@@ -23,7 +23,7 @@ J, policy = value_iteration(uMax, gridSize, 1000)
 
 p_2 = extract_policy_from_values(uMax, gridSize, J)
 
-np.save('policy_2', policy)
+np.save('policy_3', policy)
 
 # toc
 # %% Trace back the optimal policy, for given a certain initial condition
