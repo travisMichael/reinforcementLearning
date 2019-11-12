@@ -1,5 +1,6 @@
 import numpy as np
 from mdp_two_module.mountainCarValueIteration import value_iteration
+from mdp_two_module.extractPolicy import extract_policy_from_values
 
 # %  This is the main file for the simulation.
 #     clear all
@@ -19,6 +20,8 @@ x0 = [-0.52, 0]
 # %% Find optimal policy.
 # tic
 J, policy = value_iteration(uMax, gridSize, 1000)
+
+p_2 = extract_policy_from_values(uMax, gridSize, J)
 
 np.save('policy_2', policy)
 
