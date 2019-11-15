@@ -18,12 +18,12 @@ def score_policy(policy, num_episodes=1000):
 
         # Roll out steps until done
         while not done:
-            action = np.argmax(policy[state])
-            state, reward, done, info = env.step(action)
+            action = policy[state]
+            state, reward, done, info = env.step(int(action))
             total_reward += reward
 
         # Save final score
         scores.append(total_reward)
 
-    return scores
+    return np.mean(scores)
 

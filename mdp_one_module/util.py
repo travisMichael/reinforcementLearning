@@ -34,7 +34,7 @@ action_map = {0: 'LEFT', 1: 'DOWN', 2: 'RIGHT', 3: 'UP'}
 # 21:           for each state s do
 # 22:                     π[s] = argmaxa ∑s' P(s'|s,a) (R(s,a,s')+ γVk[s'])
 # 23:           return π,Vk
-def value_iteration(environment, gamma = 0.99, epsilon = 1E-10):
+def value_iteration(environment, with_scoring, gamma = 0.99, epsilon = 1E-10):
     state_space_size = environment.observation_space.n
     V_k = np.zeros(state_space_size)
 
@@ -42,22 +42,29 @@ def value_iteration(environment, gamma = 0.99, epsilon = 1E-10):
     P = environment.P
     policy = np.zeros(state_space_size)
 
-    e_list = []
-    time_list = []
-    start = time()
-    for _ in range(2000):
+    score_list = [0]
+    time_list = [0]
+    time_sum = 0.0
 
+    for index in range(2000):
+
+        start = time()
         for state in range(state_space_size):
             V_k[state], policy[state] = value_max_with_arg_max(state, V_k_previous, gamma, P)
 
         e = calculate_error(V_k, V_k_previous)
         if e < epsilon:
             break
-        e_list.append(e)
-        time_list.append(time() - start)
+        time_sum += time() - start
+        if with_scoring and index % 5 == 0:
+            print('scoring:', index)
+            policy = extract_policy(V_k, environment, gamma)
+            score_list.append(score_policy(policy))
+            time_list.append(time_sum)
+
         V_k_previous = np.copy(V_k)
 
-    return V_k, policy, e_list, time_list
+    return V_k, policy, score_list, time_list
 
 
 def value_max_with_arg_max(state, V_k_previous, gamma, P):
@@ -103,27 +110,27 @@ def policies_are_equal(policy_1, policy_2):
     return True
 
 
-def policy_iteration(environment, gamma=0.99, max_iterations=2000):
+def policy_iteration(environment, with_scoring, gamma=0.99, max_iterations=2000):
     state_space_size = environment.observation_space.n
     policy = np.zeros(state_space_size)
 
-    e_list = []
+    score_list = []
     time_list = []
-    iteration_list = []
-    start = time()
-    V_prev = np.zeros(state_space_size)
+
     for _ in range(max_iterations):
+        if with_scoring:
+            score = score_policy(policy)
+            score_list.append(score)
+        start = time()
         V = calculate_values_from_policy(policy, environment, [], [], start, gamma)
         new_policy = extract_policy(V, environment, gamma)
+
         has_not_changed = policies_are_equal(policy, new_policy)
-        e = calculate_error(V, V_prev)
         if has_not_changed:
             break
-        e_list.append(e)
         time_list.append(time() - start)
-        V_prev = np.copy(V)
-        policy = new_policy
-    return V, policy, e_list, time_list
+        policy = np.copy(new_policy)
+    return V, policy, score_list, time_list
 
 
 def extract_policy(V, env, gamma=0.99):
