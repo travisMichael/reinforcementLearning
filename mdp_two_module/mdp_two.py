@@ -52,27 +52,11 @@ def calculate_state_value(V_k_prev, state, state_grid, env, action_grid, gamma):
         if value > best_value:
             best_value = value
             best_action = action
-    #     key = str(n_s[0]) + "-" + str(n_s[1])
-    #     map_value = next_state_map.get(key)
-    #     if map_value == None:
-    #         next_state_map[key] = [value, [action, reward]]
-    #     else:
-    #         if map_value[1][1] < reward:
-    #             map_value[0] = value
-    #             map_value[1] = [action, reward]
-    #         next_state_map[key] = map_value
-    # best = -np.inf
-    # best_action = action_grid[0]
-    # for k in next_state_map.keys():
-    #     map_value = next_state_map.get(k)
-    #     if map_value[0] > best:
-    #         best = map_value[0]
-    #         best_action = map_value[1][0]
 
     return reward + best_value, best_action
 
 
-def V_diff(V_1, V_2, state_grid):
+def V_diff(V_1, V_2):
     diff = (np.square(V_1 - V_2)).mean(axis=None)
     return diff
 

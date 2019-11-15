@@ -1,6 +1,8 @@
 import numpy as np
 from deep_learning_module.DQN import QNetwork
 import torch
+from time import time
+from mdp_one_module.score_mdp import score_policy
 
 # LEFT = 0
 # DOWN = 1
@@ -32,24 +34,30 @@ action_map = {0: 'LEFT', 1: 'DOWN', 2: 'RIGHT', 3: 'UP'}
 # 21:           for each state s do
 # 22:                     π[s] = argmaxa ∑s' P(s'|s,a) (R(s,a,s')+ γVk[s'])
 # 23:           return π,Vk
-def value_iteration(environment, gamma = 0.99):
+def value_iteration(environment, gamma = 0.99, epsilon = 1E-10):
     state_space_size = environment.observation_space.n
-    action_space_size = environment.action_space.n
     V_k = np.zeros(state_space_size)
-    # V_k[state_space_size - 1] = 1.0
 
-    V_k_previous = V_k
+    V_k_previous = np.copy(V_k)
     P = environment.P
     policy = np.zeros(state_space_size)
 
-    for _ in range(100):
+    e_list = []
+    time_list = []
+    start = time()
+    for _ in range(2000):
 
         for state in range(state_space_size):
             V_k[state], policy[state] = value_max_with_arg_max(state, V_k_previous, gamma, P)
 
-        V_k_previous = V_k
+        e = calculate_error(V_k, V_k_previous)
+        if e < epsilon:
+            break
+        e_list.append(e)
+        time_list.append(time() - start)
+        V_k_previous = np.copy(V_k)
 
-    return V_k, policy
+    return V_k, policy, e_list, time_list
 
 
 def value_max_with_arg_max(state, V_k_previous, gamma, P):
@@ -83,6 +91,11 @@ def create_policy_descriptions(policy):
     return policy_descriptions
 
 
+def calculate_error(V_1, V_2):
+    diff = (np.square(V_1 - V_2)).mean(axis=None)
+    return diff
+
+
 def policies_are_equal(policy_1, policy_2):
     for i in range(len(policy_1)):
         if policy_1[i] != policy_2[i]:
@@ -94,14 +107,23 @@ def policy_iteration(environment, gamma=0.99, max_iterations=2000):
     state_space_size = environment.observation_space.n
     policy = np.zeros(state_space_size)
 
+    e_list = []
+    time_list = []
+    iteration_list = []
+    start = time()
+    V_prev = np.zeros(state_space_size)
     for _ in range(max_iterations):
-        V = calculate_values_from_policy(policy, environment, gamma)
+        V = calculate_values_from_policy(policy, environment, [], [], start, gamma)
         new_policy = extract_policy(V, environment, gamma)
         has_not_changed = policies_are_equal(policy, new_policy)
+        e = calculate_error(V, V_prev)
         if has_not_changed:
             break
+        e_list.append(e)
+        time_list.append(time() - start)
+        V_prev = np.copy(V)
         policy = new_policy
-    return V, policy
+    return V, policy, e_list, time_list
 
 
 def extract_policy(V, env, gamma=0.99):
@@ -126,14 +148,12 @@ def extract_policy(V, env, gamma=0.99):
     return policy
 
 
-def calculate_values_from_policy(policy, env, gamma=0.99, iterations=50):
-    #         v[s] = sum([p * (r + gamma * prev_v[s_]) for p, s_, r, _ in env.P[s][policy_a]])
-    #     if (np.sum((np.fabs(prev_v - v))) <= eps):
+def calculate_values_from_policy(policy, env, e_list, t_list, start, gamma=0.99, iterations=2000, epsilon=1E-10):
     P = env.P
     s_n = env.observation_space.n
     V = np.zeros(s_n)
-    V[env.observation_space.n - 1] = 1.0
-    V_prev = V
+    V_prev = np.copy(V)
+
     for _ in range(iterations):
         for i in range(s_n):
             state_transition_list = P[i]
@@ -146,8 +166,13 @@ def calculate_values_from_policy(policy, env, gamma=0.99, iterations=50):
                 reward = transition[2]
                 sum += probability * (reward + gamma * V_prev[next_state])
             V[i] = sum
-
-        V_prev = V
+        e = calculate_error(V, V_prev)
+        if e < epsilon:
+            break
+        e_list.append(e)
+        #print(start)
+        t_list.append(time() - start)
+        V_prev = np.copy(V)
     return V
 
 
