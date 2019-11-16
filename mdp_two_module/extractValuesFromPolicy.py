@@ -3,7 +3,7 @@ from mdp_two_module.mountainCarSimulation import mountainCarSim
 from discrete.snapToGrid import snap_to_grid
 
 
-def extract_values_from_policy(u_max, gridSize, maxHorizon, policy):
+def extract_values_from_policy(u_max, gridSize, maxHorizon, policy, gamma):
     P_MIN = -1.2
     P_MAX = 0.5
     V_MIN = -0.07
@@ -46,7 +46,7 @@ def extract_values_from_policy(u_max, gridSize, maxHorizon, policy):
                 pNextIdx = snap_to_grid(pNext, P_MIN, P_MAX, gridPos)
                 vNextIdx = snap_to_grid(vNext, V_MIN, V_MAX, gridVel)
 
-                Jplus1_ =  0.99 * J[pNextIdx, vNextIdx]
+                Jplus1_ =  gamma * J[pNextIdx, vNextIdx]
 
                 if pNextIdx != gridPos:
                     Jplus1_ = Jplus1_ + 1

@@ -4,10 +4,14 @@ from discrete.snapToGrid import snap_to_grid
 from environment.MountainCar import MountainCarEnv
 
 
-def score_policy(policy, P_MIN, V_MIN, P_MAX, V_MAX, gridPos, gridVel, num_episodes=100):
+def score_policy(policy, gridPos, gridVel, num_episodes=100):
     # env = gym.make('MountainCar-v0')
     env = MountainCarEnv()
     env.seed(505)
+    P_MIN = -1.2
+    P_MAX = 0.5
+    V_MIN = -0.07
+    V_MAX = 0.07
 
     scores = []
 
