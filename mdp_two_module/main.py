@@ -19,25 +19,8 @@ x0 = [-0.52, 0]
 # %x0 = [0.4 0];
 # %% Find optimal policy.
 # tic
-J, policy = value_iteration(uMax, gridSize, 1000)
+J, policy, scores = value_iteration(uMax, gridSize, 1000, should_score=True)
 
 p_2 = extract_policy_from_values(uMax, gridSize, J)
 
-np.save('policy_3', policy)
-
-# toc
-# %% Trace back the optimal policy, for given a certain initial condition
-# [XStar, UStar, TStar] = ...
-# traceBack(predecessorP, predecessorV, policy, x0, gridSize);
-# %% Animation
-# visualizeMountainCar(gridPos, XStar, UStar)
-# %% Plot errors over iterations.
-# figure
-# plot(error);
-# title('Convergence errors over iterations');
-# %% Plot the policy matrix.
-# figure
-# imagesc(policy)
-# title('Policy matrix')
-# xlabel('Position');
-# ylabel('Velocity');
+# np.save('policy_3', policy)

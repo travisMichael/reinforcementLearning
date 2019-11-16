@@ -1,7 +1,5 @@
 import numpy as np
 import gym
-# import sys
-# from discrete.QLearningAgent import QLearningAgent
 
 
 def score_policy(policy, num_episodes=1000):
