@@ -1,21 +1,22 @@
 import numpy as np
 import sys
-from discrete.DiscreteQLearningAgent import DiscreteQLearningAgent
+import gym
+from discrete.DiscreteQLearningAgent import QLearningAgent
 from mdp_two_module.util_2 import create_uniform_grid
-from Pendulum import PendulumEnv
+from environment.MountainCar import MountainCarEnv
 
-
-# env = gym.make('Pendulum-v0')
-env = PendulumEnv()
+env = gym.make('MountainCar-v0')
+env = MountainCarEnv()
 env.seed(505)
 
 
-def run(agent, env, num_episodes=20000, mode='train'):
-    best = -1111111
+def run(agent, env, num_episodes=100000, mode='train'):
     """Run agent in given reinforcement learning environment and return scores."""
     scores = []
-    rewards = []
-    max_avg_score = -np.inf
+    avg_scores = []
+    max_avg_score = np.inf
+    avg_score = 800
+    iterations_without_improvement = 0
     for i_episode in range(1, num_episodes+1):
         # Initialize episode
         state = env.reset()
@@ -24,40 +25,75 @@ def run(agent, env, num_episodes=20000, mode='train'):
         done = False
 
         # Roll out steps until done
-        for i in range(300):
+        for i in range(800):
             state, reward, done, info = env.step(action)
-            total_reward += reward
-            rewards.append(reward)
+            # total_reward += reward
+            total_reward += 1
             action = agent.act(state, reward, done, mode)
-            if len(rewards) > 100 and i % 1000 == 0:
-                avg_reward = np.mean(rewards[-100:])
-                #print(avg_reward)
+            if done:
+                break
 
         # Save final score
         scores.append(total_reward)
-        if total_reward > best:
-            agent.save()
-            best = total_reward
-            print(total_reward)
+        avg_scores.append(avg_score)
+
+        iterations_without_improvement += 1
 
         # Print episode stats
         if mode == 'train':
-            avg_score = 0.0
             if len(scores) > 100:
                 avg_score = np.mean(scores[-100:])
-                if avg_score > max_avg_score:
-                    agent.save()
-                    best = total_reward
-                    # print("better")
+                if avg_score < max_avg_score:
                     max_avg_score = avg_score
+                    iterations_without_improvement = 0
             if i_episode % 100 == 0:
-                print("\rEpisode {}/{} | Max Average Score: {}".format(i_episode, num_episodes, avg_score), end="")
+                print("\rEpisode {}/{} | Max Average Score: {}, Average Score: {}".format(i_episode, num_episodes, max_avg_score, avg_score), end="")
                 sys.stdout.flush()
 
-    return scores
+        if iterations_without_improvement > 5000:
+            break
 
-action_grid = create_uniform_grid(env.action_space.low, env.action_space.high, bins=(7,))
+    return avg_scores
 
-state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(10, 10, 10))
-q_agent = DiscreteQLearningAgent(env, state_grid, action_grid)
+
+state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(20, 20))
+
+# q_agent = QLearningAgent(env, state_grid)
+# scores = run(q_agent, env)
+# np.save('q_learner_stats/alpha_0-005', np.array(scores))
+# print('005')
+
+q_agent = QLearningAgent(env, state_grid, alpha=0.05)
 scores = run(q_agent, env)
+np.save('q_learner_stats/alpha_0-05', np.array(scores))
+print('05')
+
+q_agent = QLearningAgent(env, state_grid, alpha=0.5)
+scores = run(q_agent, env)
+np.save('q_learner_stats/alpha_0-5', np.array(scores))
+print('5')
+
+# q_agent = QLearningAgent(env, state_grid, alpha=0.05, gamma=)
+# scores = run(q_agent, env)
+# np.save('q_learner_stats/gamma_0-999', np.array(scores))
+# print('999')
+
+q_agent = QLearningAgent(env, state_grid, alpha=0.05, gamma=0.99)
+scores = run(q_agent, env)
+np.save('q_learner_stats/gamma_0-99', np.array(scores))
+print('99')
+
+q_agent = QLearningAgent(env, state_grid, alpha=0.05, gamma=0.9)
+scores = run(q_agent, env)
+np.save('q_learner_stats/gamma_0-9', np.array(scores))
+print('9')
+
+q_agent = QLearningAgent(env, state_grid, alpha=0.05, epsilon_decay_rate=0.999)
+scores = run(q_agent, env)
+np.save('q_learner_stats/geo_0-999', np.array(scores))
+print('geo_99999')
+
+q_agent = QLearningAgent(env, state_grid, alpha=0.05, epsilon_decay_rate=0.99)
+scores = run(q_agent, env)
+np.save('q_learner_stats/geo_0-99', np.array(scores))
+print('geo_99')
