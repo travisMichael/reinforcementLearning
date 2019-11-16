@@ -8,16 +8,16 @@ env = gym.make('FrozenLake-v0')
 env.seed(505)
 
 
-def run(agent, env, num_episodes=20000, mode='train'):
+def run(agent, env, num_episodes=100000, mode='train'):
     """Run agent in given reinforcement learning environment and return scores."""
     scores = []
-    episode_list = []
     avg_score_list = []
     max_avg_score = -np.inf
     avg_score = 0.0
-    old_q_table = np.copy(agent.q_table)
+    iterations_without_improvement = 0
     for i_episode in range(1, num_episodes+1):
         # Initialize episode
+        iterations_without_improvement += 1
         state = env.reset()
         action = agent.reset_episode(state)
         total_reward = 0
@@ -32,7 +32,6 @@ def run(agent, env, num_episodes=20000, mode='train'):
         # Save final score
         scores.append(total_reward)
         avg_score_list.append(avg_score)
-        episode_list.append(i_episode)
         # Print episode stats
         if mode == 'train':
 
@@ -41,19 +40,22 @@ def run(agent, env, num_episodes=20000, mode='train'):
                 if avg_score > max_avg_score:
                     np.save('best_q_learner_one', agent.q_table)
                     max_avg_score = avg_score
+                    iterations_without_improvement = 0
             if i_episode % 100 == 0:
-                e = calculate_error(old_q_table, agent.q_table)
-                print("\rEpisode {}/{} | Max Average Score: {}".format(i_episode, num_episodes, e), end="")
+                print("\rEpisode {}/{} | Max Average Score: {}".format(i_episode, num_episodes, max_avg_score), end="")
                 sys.stdout.flush()
                 old_q_table = np.copy(agent.q_table)
 
-    return scores, avg_score_list, episode_list
+        if iterations_without_improvement > 5000:
+            break
+
+    return scores, avg_score_list
 
 
-q_agent = QLearningAgent(env)
-scores, avg_score_list, episode_list = run(q_agent, env)
+q_agent = QLearningAgent(env, strategy=2)
+scores, avg_score_list = run(q_agent, env)
 
-np.save('q_learner_stats/avg_score_list', np.array(avg_score_list))
-np.save('q_learner_stats/episode_list', np.array(episode_list))
+np.save('q_learner_stats/avg_score_list_exp_10000', np.array(avg_score_list))
+
 
 print()
