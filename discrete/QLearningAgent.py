@@ -1,11 +1,11 @@
 import numpy as np
-import math
 
 
 GEOMETRIC_ACTION_STRATEGY = 0
 LINEAR_ACTION_STRATEGY = 1
 EXPONENTIAL_ACTION_STRATEGY = 2
 UPPER_CONFIDENCE_BOUND_ACTION_STRATEGY = 3
+
 
 class QLearningAgent:
     """Q-Learning agent that can act on a continuous state space by discretizing it."""
