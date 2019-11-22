@@ -56,7 +56,27 @@ def run(agent, env, num_episodes=100000, mode='train'):
     return avg_scores
 
 
-state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(20, 20))
+def generate_q_learner_2_stats():
+    state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(20, 20))
+
+    # 1
+    q_agent = QLearningAgent(env, state_grid, strategy=0)
+    scores = run(q_agent, env)
+    np.save('q_learner_stats/exp_10000', np.array(scores))
+    print('5')
+
+    # 2
+    q_agent = QLearningAgent(env, state_grid, strategy=1)
+    scores = run(q_agent, env)
+    np.save('q_learner_stats/exp_10000', np.array(scores))
+    print('5')
+
+    # 3
+    q_agent = QLearningAgent(env, state_grid, strategy=2)
+    scores = run(q_agent, env)
+    np.save('q_learner_stats/exp_10000', np.array(scores))
+    print('5')
+
 
 # q_agent = QLearningAgent(env, state_grid)
 # scores = run(q_agent, env)
@@ -103,7 +123,3 @@ state_grid = create_uniform_grid(env.observation_space.low, env.observation_spac
 # np.save('q_learner_stats/linear_0-0001', np.array(scores))
 # print('5')
 
-q_agent = QLearningAgent(env, state_grid, alpha=0.05, strategy=2)
-scores = run(q_agent, env)
-np.save('q_learner_stats/exp_10000', np.array(scores))
-print('5')

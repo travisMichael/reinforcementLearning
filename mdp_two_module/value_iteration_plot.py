@@ -1,10 +1,9 @@
-from environment.FrozenLake import FrozenLakeEnv
 import numpy as np
 import matplotlib.pyplot as plt
 from mdp_two_module.mountainCarValueIteration import value_iteration
 
 
-def generate_stats():
+def generate_vi_stats_2():
     gridSize = [100, 100]
     # %gridSize = [200 200];
     gridPos = gridSize[1]
@@ -15,7 +14,7 @@ def generate_stats():
     np.save('stats/value_iteration_times_0-5', np.array(times))
 
 
-def value_iteration_plot():
+def value_iteration_plot_2():
 
     scores = np.load('stats/value_iteration_scores_0-99.npy')
     times = np.load('stats/value_iteration_times_0-99.npy')
@@ -49,5 +48,6 @@ def value_iteration_plot():
     print()
 
 
-# generate_stats()
-value_iteration_plot()
+if __name__ == "__main__":
+    generate_stats_2()
+    value_iteration_plot_2()

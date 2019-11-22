@@ -116,7 +116,7 @@ def load(path):
 
 
 # q_learner_gamma_plot()
-q_learner_geometric_exploration_plot()
-q_learner_alpha_plot()
-q_learner_linear_exploration_plot()
-q_learner_exponential_exploration_plot()
+# q_learner_geometric_exploration_plot()
+# q_learner_alpha_plot()
+# q_learner_linear_exploration_plot()
+# q_learner_exponential_exploration_plot()
