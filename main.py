@@ -27,7 +27,7 @@ if __name__ == "__main__":
         elif plot == 'pi_mdp_two':
             policy_iteration_plot_2()
             generate_pi_stats_2()
-        elif plot == 'q_mdp_two':
+        elif plot == 'q_learner_two':
             generate_q_learner_2_stats()
             q_learner_2_gamma_plot()
             q_learner_2_alpha_plot()
