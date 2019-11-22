@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def q_learner_gamma_plot():
+def q_learner_2_gamma_plot():
 
     score_list, episode_list = load('q_learner_stats/alpha_0-05.npy')
     score_list_2, episode_list_2 = load('q_learner_stats/gamma_0-99.npy')
@@ -24,7 +24,7 @@ def q_learner_gamma_plot():
     print()
 
 
-def q_learner_alpha_plot():
+def q_learner_2_alpha_plot():
 
     score_list, episode_list = load('q_learner_stats/alpha_0-5.npy')
     score_list_2, episode_list_2 = load('q_learner_stats/alpha_0-05.npy')
@@ -46,7 +46,7 @@ def q_learner_alpha_plot():
     print()
 
 
-def q_learner_geometric_exploration_plot():
+def q_learner_2_geometric_exploration_plot():
 
     score_list, episode_list = load('q_learner_stats/alpha_0-05.npy')
     score_list_2, episode_list_2 = load('q_learner_stats/geo_0-99.npy')
@@ -66,7 +66,7 @@ def q_learner_geometric_exploration_plot():
     print()
 
 
-def q_learner_linear_exploration_plot():
+def q_learner_2_linear_exploration_plot():
 
     score_list, episode_list = load('q_learner_stats/linear_0-1.npy')
     score_list_2, episode_list_2 = load('q_learner_stats/linear_0-01.npy')
@@ -86,7 +86,7 @@ def q_learner_linear_exploration_plot():
     print()
 
 
-def q_learner_exponential_exploration_plot():
+def q_learner_2_exponential_exploration_plot():
 
     score_list, episode_list = load('q_learner_stats/exp_500.npy')
     score_list_2, episode_list_2 = load('q_learner_stats/exp_2200.npy')

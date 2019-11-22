@@ -6,6 +6,7 @@ from mdp_one_module.Q_learner_one import generate_q_learner_stats
 from mdp_two_module.value_iteration_plot import value_iteration_plot_2, generate_vi_stats_2
 from mdp_two_module.mc_policy_iteration_plot import policy_iteration_plot_2, generate_pi_stats_2
 from mdp_two_module.Q_learner_two import generate_q_learner_2_stats
+from mdp_two_module.q_learner_plot import *
 
 
 if __name__ == "__main__":
@@ -28,3 +29,6 @@ if __name__ == "__main__":
             generate_pi_stats_2()
         elif plot == 'q_mdp_two':
             generate_q_learner_2_stats()
+            q_learner_2_gamma_plot()
+            q_learner_2_alpha_plot()
+            q_learner_2_exponential_exploration_plot()
