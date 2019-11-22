@@ -31,4 +31,5 @@ def policy_iteration_plot():
     print()
 
 
-policy_iteration_plot()
+if __name__ == "__main__":
+    policy_iteration_plot()

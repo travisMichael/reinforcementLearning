@@ -12,8 +12,6 @@ def value_iteration_plot():
     i_list = []
     for i in range(len(scores)):
         i_list.append(i * 5)
-    # for i in range(len(times)):
-    #     t_list.append(t_list[i] + times[i])
 
     labels = ['Time(s)', 'Iterations']
     values = [times, i_list]
@@ -31,5 +29,5 @@ def value_iteration_plot():
     print()
 
 
-env = FrozenLakeEnv()
-value_iteration_plot()
+if __name__ == "__main__":
+    value_iteration_plot()

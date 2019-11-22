@@ -2,7 +2,6 @@ import numpy as np
 import gym
 import sys
 from discrete.QLearningAgent import QLearningAgent
-from mdp_one_module.util import calculate_error
 
 env = gym.make('FrozenLake-v0')
 env.seed(505)
@@ -52,10 +51,24 @@ def run(agent, env, num_episodes=100000, mode='train'):
     return scores, avg_score_list
 
 
-q_agent = QLearningAgent(env, strategy=2)
-scores, avg_score_list = run(q_agent, env)
+def generate_q_learner_stats():
+    # 1
+    q_agent = QLearningAgent(env, strategy=0)
+    scores, avg_score_list = run(q_agent, env)
+    np.save('q_learner_stats/avg_score_list_geometric_0-999', np.array(avg_score_list))
 
-np.save('q_learner_stats/avg_score_list_exp_10000', np.array(avg_score_list))
+    # 2
+    q_agent = QLearningAgent(env, strategy=1)
+    scores, avg_score_list = run(q_agent, env)
+    np.save('q_learner_stats/avg_score_list_linear_0-01', np.array(avg_score_list))
+
+    # 3
+    q_agent = QLearningAgent(env, strategy=2)
+    scores, avg_score_list = run(q_agent, env)
+    np.save('q_learner_stats/avg_score_list_exp_2200', np.array(avg_score_list))
 
 
-print()
+if __name__ == "__main__":
+    generate_q_learner_stats()
+
+
