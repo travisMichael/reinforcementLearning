@@ -42,5 +42,5 @@ def policy_iteration_plot_2():
 
 
 if __name__ == "__main__":
-    generate_stats_2()
+    # generate_pi_stats_2()
     policy_iteration_plot_2()

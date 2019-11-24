@@ -78,6 +78,7 @@ def generate_q_learner_2_stats():
     print('5')
 
 
+state_grid = create_uniform_grid(env.observation_space.low, env.observation_space.high, bins=(10, 10))
 # q_agent = QLearningAgent(env, state_grid)
 # scores = run(q_agent, env)
 # np.save('q_learner_stats/alpha_0-005', np.array(scores))
@@ -118,8 +119,8 @@ def generate_q_learner_2_stats():
 # np.save('q_learner_stats/geo_0-99', np.array(scores))
 # print('geo_99')
 
-# q_agent = QLearningAgent(env, state_grid, alpha=0.05, strategy=1)
-# scores = run(q_agent, env)
-# np.save('q_learner_stats/linear_0-0001', np.array(scores))
-# print('5')
+q_agent = QLearningAgent(env, state_grid, alpha=0.05, strategy=1)
+scores = run(q_agent, env)
+np.save('q_learner_stats/linear_0-0001', np.array(scores))
+print('5')
 

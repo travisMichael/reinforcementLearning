@@ -46,7 +46,7 @@ class QLearningAgent:
         """Reset variables for a new episode."""
         # Gradually decrease exploration rate
         self.episode += 1
-        self.linear_epsilon = max(0.01, self.linear_epsilon - 0.0001)
+        self.linear_epsilon = 0.01 # max(0.01, self.linear_epsilon - 0.0001)
         self.epsilon *= self.epsilon_decay_rate
         self.epsilon = max(self.epsilon, self.min_epsilon)
 

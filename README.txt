@@ -7,7 +7,7 @@ The project consists of multiple python programs that require python 3.6.8 or ab
 
 The project can be cloned by running the following command:
 
-https://github.com/travisMichael/reinforcemntLearning.git
+https://github.com/travisMichael/reinforcementLearning.git
 
 To generate the plots from the analysis paper, run the following command:
 
